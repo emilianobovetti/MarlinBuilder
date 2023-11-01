@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+
+set -xe
+
+docker build --tag=marlin .
+
+# To get the target env:
+# 1. look at `MOTHERBOARD` inside your `Configuration.h`
+#   E.g.: https://github.com/MarlinFirmware/Marlin/blob/2.1.2.1/Marlin/Configuration.h#L90
+# 2. search for that value inside `pins.h`
+#   E.g.: https://github.com/MarlinFirmware/Marlin/blob/2.1.2.1/Marlin/src/pins/pins.h#L84
+docker run \
+  --rm \
+  --interactive \
+  --tty \
+  --volume="marlin-platformio:/home/app/.platformio" \
+  --volume="$PWD/pio:/home/app/marlin/.pio" \
+  $(ls -A1 config | xargs -I {} echo "--volume=$PWD/config/{}:/home/app/marlin/Marlin/{}") \
+  marlin \
+  platformio run -e STM32G0B1RE_btt
