@@ -19,19 +19,20 @@ RUN set -xe \
 
 USER app
 
-ENV PLATFORMIO_VERSION="1.2.1" \
-  MARLIN_VERSION="2.1.2.1"
+ARG MARLIN_VERSION
+ARG MARLIN_SHA256
+
+ARG PLATFORMIO_CORE_VERSION
+ARG PLATFORMIO_CORE_SHA256
 
 RUN set -xe \
-  && PLATFORMIO_DOWNLOAD_URL="https://raw.githubusercontent.com/platformio/platformio-core-installer/v$PLATFORMIO_VERSION/get-platformio.py" \
-  && PLATFORMIO_DOWNLOAD_SHA256="85670d0df6e1c16393236bf6bd5bd712a6e293c2af612840921d8a102c0d3830" \
+  && PLATFORMIO_DOWNLOAD_URL="https://raw.githubusercontent.com/platformio/platformio-core-installer/v$PLATFORMIO_CORE_VERSION/get-platformio.py" \
   && curl -fsSL -o /tmp/get-platformio.py "$PLATFORMIO_DOWNLOAD_URL" \
-  && echo "$PLATFORMIO_DOWNLOAD_SHA256  /tmp/get-platformio.py" | sha256sum -c - \
+  && echo "$PLATFORMIO_CORE_SHA256  /tmp/get-platformio.py" | sha256sum -c - \
   && python3 /tmp/get-platformio.py \
   && MARLIN_DOWNLOAD_URL="https://github.com/MarlinFirmware/Marlin/archive/$MARLIN_VERSION.tar.gz" \
-  && MARLIN_DOWNLOAD_SHA256="31ba7e56def2ddec17dc1983c74dc567d5f0220ad3f211d00714196c082b7807" \
   && curl -fsSL -o /tmp/marlin.tar.gz "$MARLIN_DOWNLOAD_URL" \
-  && echo "$MARLIN_DOWNLOAD_SHA256  /tmp/marlin.tar.gz" | sha256sum -c - \
+  && echo "$MARLIN_SHA256  /tmp/marlin.tar.gz" | sha256sum -c - \
   && mkdir -p /home/app/marlin \
   && tar -xzC /home/app/marlin --strip-components=1 -f /tmp/marlin.tar.gz
 

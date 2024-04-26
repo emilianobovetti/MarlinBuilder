@@ -2,7 +2,16 @@
 
 set -xe
 
-docker build --tag=marlin .
+# MARLIN_VERSION: https://github.com/MarlinFirmware/Marlin
+# PLATFORMIO_CORE_VERSION: https://github.com/platformio/platformio-core-installer
+
+docker build \
+  --build-arg="MARLIN_VERSION=2.1.2.1" \
+  --build-arg="MARLIN_SHA256=31ba7e56def2ddec17dc1983c74dc567d5f0220ad3f211d00714196c082b7807" \
+  --build-arg="PLATFORMIO_CORE_VERSION=1.2.1" \
+  --build-arg="PLATFORMIO_CORE_SHA256=85670d0df6e1c16393236bf6bd5bd712a6e293c2af612840921d8a102c0d3830" \
+  --tag=marlin \
+  "$PWD"
 
 # To get the target env:
 # 1. look at `MOTHERBOARD` inside your `Configuration.h`
