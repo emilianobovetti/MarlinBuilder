@@ -6,18 +6,16 @@ set -xe
 # PLATFORMIO_CORE_VERSION: https://github.com/platformio/platformio-core-installer
 
 docker build \
-  --build-arg="MARLIN_VERSION=2.1.2.1" \
-  --build-arg="MARLIN_SHA256=31ba7e56def2ddec17dc1983c74dc567d5f0220ad3f211d00714196c082b7807" \
+  --build-arg="MARLIN_VERSION=2.1.2.2" \
+  --build-arg="MARLIN_SHA256=67351439369f9a267231e7280314a2a13bb1919a736a02f9410b26d8f78f221e" \
   --build-arg="PLATFORMIO_CORE_VERSION=1.2.2" \
   --build-arg="PLATFORMIO_CORE_SHA256=068d5dca983b22ed36a00dea7d42e58b646f0ac495885892f5746357f39a0470" \
   --tag=marlin \
   "$PWD"
 
-# To get the target env:
-# 1. look at `MOTHERBOARD` inside your `Configuration.h`
-#   E.g.: https://github.com/MarlinFirmware/Marlin/blob/2.1.2.1/Marlin/Configuration.h#L90
-# 2. search for that value inside `pins.h`
-#   E.g.: https://github.com/MarlinFirmware/Marlin/blob/2.1.2.1/Marlin/src/pins/pins.h#L84
+# ref: https://marlinfw.org/docs/basics/install_platformio_vscode.html#6.-find-and-set-build-environment
+ENVIRONMENT=STM32G0B1RE_btt
+
 docker run \
   --rm \
   --interactive \
@@ -26,4 +24,4 @@ docker run \
   --volume="$PWD/pio:/home/app/marlin/.pio" \
   $(ls -A1 config | xargs -I {} echo "--volume=$PWD/config/{}:/home/app/marlin/Marlin/{}") \
   marlin \
-  platformio run -e STM32G0B1RE_btt
+  platformio run -e "$ENVIRONMENT"
